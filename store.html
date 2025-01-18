@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المتجر</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=Changa:wght@400;500;600;700&display=swap">
+    <style>
+        :root {
+            --main-color: #ff6b6b;
+            --secondary-color: #ff5252;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: url('images/background.jpg') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Tajawal', sans-serif;
+            min-height: 100vh;
+            direction: rtl;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.7);
+            z-index: -1;
+        }
+
+        .store-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .store-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .store-header h1 {
+            color: #fff;
+            font-size: 36px;
+            font-family: 'Changa', sans-serif;
+            margin-bottom: 20px;
+        }
+
+        .products-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr); 
+        gap: 20px;
+        align-items: start;
+        justify-items: center;
+    }
+
+        .product-wrapper {
+            position: relative;
+            width: 160px;
+            padding-top: 25px;
+        }
+
+        .product-title {
+            position: absolute;
+            top: -5px;
+            right: -10px;
+            left: -10px;
+            background: var(--main-color);
+            color: #fff;
+            font-size: 16px;
+            font-family: 'Changa', sans-serif;
+            padding: 8px 15px;
+            border-radius: 20px;
+            text-align: center;
+            z-index: 2;
+            box-shadow: 0 3px 10px rgba(255, 107, 107, 0.3);
+        }
+
+        .product-card {
+            background: #1a1a1a;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            width: 90%;
+            max-width: 160px;
+            height: 250px;
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-image-container {
+            width: 100%;
+            height: 140px;
+            overflow: hidden;
+            position: relative;
+            background: #111;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            object-position: center;
+            transition: all 0.5s ease;
+        }
+
+        .product-info {
+            padding: 12px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-title {
+            color: #fff;
+            font-size: 15px;
+            margin: 0;
+            font-family: 'Changa', sans-serif;
+            text-align: center;
+        }
+
+        .product-price {
+            color: var(--main-color);
+            font-size: 18px;
+            font-weight: bold;
+            display: block;
+            margin: 8px 0;
+            text-align: center;
+        }
+
+        .buy-btn {
+            width: 100%;
+            padding: 8px;
+            background: var(--main-color);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Changa', sans-serif;
+        }
+
+        .buy-btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.1);
+        }
+
+        .categories {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            padding: 0 10px;
+        }
+
+        .category-btn {
+            padding: 10px 25px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 20px;
+            color: #fff;
+            font-family: 'Changa', sans-serif;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .category-btn:hover, 
+        .category-btn.active {
+            background: var(--main-color);
+        }
+
+        .confirm-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #1a1a1a;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            overflow: hidden;
+            animation: modalIn 0.3s ease;
+        }
+
+        .modal-image-container {
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+        }
+
+        .modal-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .modal-info {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .modal-title {
+            color: #fff;
+            font-size: 20px;
+            margin-bottom: 10px;
+            font-family: 'Changa', sans-serif;
+        }
+
+        .modal-price {
+            color: var(--main-color);
+            font-size: 22px;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 20px;
+            font-family: 'Changa', sans-serif;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .confirm-btn, .cancel-btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'Changa', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .confirm-btn {
+            background: var(--main-color);
+            color: white;
+        }
+
+        .confirm-btn:hover {
+            background: var(--secondary-color);
+        }
+
+        .cancel-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .cancel-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .navbar {
+            background: rgba(17, 17, 17, 0.95);
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-family: 'Changa', sans-serif;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            padding: 8px 15px;
+            border-radius: 8px;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: var(--main-color);
+            color: white;
+        }
+
+        /* تعديل المسافة العلوية للمحتوى الرئيسي */
+        .store-container {
+            margin-top: 100px;  /* لإضافة مسافة تحت القائمة */
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="images/oasis-logo.png" alt="Logo">
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">الرئيسية</a></li>
+                <li><a href="store.html">المتجر</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="store-container">
+        <div class="store-header">
+            <h1>متجر السيرفر</h1>
+        </div>
+
+        <div class="categories">
+            <button class="category-btn active">الكل</button>
+            <button class="category-btn">آيديات مميزة</button>
+            <button class="category-btn">سيارات مميزة</button>
+            <button class="category-btn">عضويات</button>
+        </div>
+
+        <div class="products-grid">
+            <!-- منتج 1 -->
+            <div class="product-wrapper">
+                <h3 class="product-title">سيارة بورش</h3>
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <img src="images/porsh.png" alt="سيارة بورش" class="product-image">
+                    </div>
+                    <div class="product-info">
+                        <span class="product-price">1000 جنيه</span>
+                        <button class="buy-btn" onclick="showConfirmModal(this)">شراء الآن</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- منتج 2 -->
+            <div class="product-wrapper">
+                <h3 class="product-title">سيارة مميزة</h3>
+                <div class="product-card">
+                    <img src="images/vip.png" alt="سيارة مميزة" class="product-image">
+                    <div class="product-info">
+                        <span class="product-price">2000 جنيه</span>
+                        <button class="buy-btn" onclick="showConfirmModal(this)">شراء الآن</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-wrapper">
+                <h3 class="product-title">سيارة ماكلارين</h3>
+                <div class="product-card">
+                    <img src="images/mac.png" alt="سيارة ماكلارين" class="product-image">
+                    <div class="product-info">
+                        <span class="product-price">2000 جنيه</span>
+                        <button class="buy-btn" onclick="showConfirmModal(this)">شراء الآن</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-wrapper">
+                <h3 class="product-title">لامبورجيني</h3>
+                <div class="product-card">
+                    <img src="images/lambo.png" alt="لامبورجيني" class="product-image">
+                    <div class="product-info">
+                        <span class="product-price">2000 جنيه</span>
+                        <button class="buy-btn" onclick="goToPurchase(this)">شراء الآن</button>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="product-wrapper">
+                <h3 class="product-title">هيليكوبتر مميزة</h3>
+                <div class="product-card">
+                    <img src="images/heli.png" alt="هيليكوبتر مميزة" class="product-image">
+                    <div class="product-info">
+                        <span class="product-price">2000 جنيه</span>
+                        <button class="buy-btn" onclick="goToPurchase(this)">شراء الآن</button>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="product-wrapper">
+                <h3 class="product-title">سيارة رولز رايز</h3>
+                <div class="product-card">
+                    <img src="images/R.png" alt="سيارة رولز رايز" class="product-image">
+                    <div class="product-info">
+                        <span class="product-price">2000 جنيه</span>
+                        <button class="buy-btn" onclick="goToPurchase(this)">شراء الآن</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-wrapper">
+                <h3 class="product-title">كورفيت</h3>
+                <div class="product-card">
+                    <img src="images/corfet.png" alt="كورفيت" class="product-image">
+                    <div class="product-info">
+                        <span class="product-price">2000 جنيه</span>
+                        <button class="buy-btn" onclick="goToPurchase(this)">شراء الان</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-wrapper">
+                <h3 class="product-title" >GTR V1 (2012)</h3>
+                <div class="product-card">
+                    <img src="images/gtr.png" alt="GTR V1 (2012)" class="product-image">
+                    <div class="product-info">
+                        <span class="product-price">2000 جنيه</span>
+                        <button class="buy-btn" onclick="goToPurchase(this)">شراء الآن</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-wrapper">
+            
+                <h3 class="product-title" >GTR (2019)</h3>
+                <div class="product-card">
+                    <img src="images/gtr 2019.png" alt="GTR (2019)" class="product-image">
+                    <div class="product-info">
+                        <span class="product-price">2000 جنيه</span>
+                        <button class="buy-btn" onclick="goToPurchase(this)">شراء الآن</button>
+                    </div>
+                </div>
+            </div>
+            <div class="product-wrapper">
+                <h3 class="product-title" >Cybertruck | Tesla</h3>
+                <div class="product-card">
+                    <img src="images/tesla.png" alt="Cybertruck | Tesla" class="product-image">
+                    <div class="product-info">
+                        <span class="product-price">2000 جنيه</span>
+                        <button class="buy-btn" onclick="goToPurchase(this)">شراء الآن</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-wrapper">
+                <h3 class="product-title" >Lamborghini Urus</h3>
+                <div class="product-card">
+                    <img src="images/lambo ors.png" alt="Lamborghini Urus" class="product-image">
+                    <div class="product-info">
+                        <span class="product-price">2000 جنيه</span>
+                        <button class="buy-btn" onclick="goToPurchase(this)">شراء الآن</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-wrapper">
+                <h3 class="product-title" >Doadge Charger</h3>
+                <div class="product-card">
+                    <img src="images/doadge.png" alt="Doadge Charger" class="product-image">
+                    <div class="product-info">
+                        <span class="product-price">2000 جنيه</span>
+                        <button class="buy-btn" onclick="goToPurchase(this)">شراء الآن</button>
+                    </div>
+                </div>
+            </div>
+            <div class="product-wrapper">
+                <h3 class="product-title" >5ra</h3>
+                <div class="product-card">
+                    <img src="images/5ra.png" alt="5ra" class="product-image">
+                    <div class="product-info">
+                        <span class="product-price">2000 جنيه</span>
+                        <button class="buy-btn" onclick="goToPurchase(this)">شراء الآن</button>
+                    </div>
+                </div>
+            </div>
+            <div class="product-wrapper">
+                <h3 class="product-title" >متجر متنقل</h3>
+                <div class="product-card">
+                    <img src="images/mtnkl.png" alt="متجر متنقل" class="product-image">
+                    <div class="product-info">
+                        <span class="product-price">2000 جنيه</span>
+                        <button class="buy-btn" onclick="goToPurchase(this)">شراء الآن</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-wrapper">
+                <h3 class="product-title" >5ra</h3>
+                <div class="product-card">
+                    <img src="images/5ra 2.png" alt="5ra" class="product-image">
+                    <div class="product-info">
+                        <span class="product-price">2000 جنيه</span>
+                        <button class="buy-btn" onclick="goToPurchase(this)">شراء الآن</button>
+                    </div>
+                </div>
+            </div>
+            <div class="product-wrapper">
+                <h3 class="product-title" >ايدي احادي</h3>
+                <div class="product-card">
+                    <img src="images/background.jpg" alt="ايدي احادي" class="product-image">
+                    <div class="product-info">
+                        <span class="product-price">700 جنيه</span>
+                        <button class="buy-btn" onclick="goToPurchase(this)">شراء الآن</button>
+                    </div>
+                </div>
+            </div>
+            <div class="product-wrapper">
+                <h3 class="product-title" >ايدي ثنائي</h3>
+                <div class="product-card">
+                    <img src="images/background.jpg" alt="ايدي ثنائي" class="product-image">
+                    <div class="product-info">
+                        <span class="product-price">500 جنيه</span>
+                        <button class="buy-btn" onclick="goToPurchase(this)">شراء الآن</button>
+                    </div>
+                </div>
+            </div>
+            <div class="product-wrapper">
+                <h3 class="product-title" >ايدي ثلاثي</h3>
+                <div class="product-card">
+                    <img src="images/background.jpg" alt="ايدي ثلاثي" class="product-image">
+                    <div class="product-info">
+                        <span class="product-price">2000 جنيه</span>
+                        <button class="buy-btn" onclick="goToPurchase(this)">شراء الآن</button>
+                    </div>
+                </div>
+            </div>
+            <div class="product-wrapper">
+                <h3 class="product-title" >عضوية برونزية</h3>
+                <div class="product-card">
+                    <img src="images/background.jpg" alt="عضوية برونزية" class="product-image">
+                    <div class="product-info">
+                        <span class="product-price">2000 جنيه</span>
+                        <button class="buy-btn" onclick="goToPurchase(this)">شراء الآن</button>
+                    </div>
+                </div>
+            </div>
+            <div class="product-wrapper">
+                <h3 class="product-title" >عضوية الفضية </h3>
+                <div class="product-card">
+                    <img src="images/background.jpg" alt="عضوية الفضية" class="product-image">
+                    <div class="product-info">
+                        <span class="product-price">2000 جنيه</span>
+                        <button class="buy-btn" onclick="goToPurchase(this)">شراء الآن</button>
+                    </div>
+                </div>
+            </div>
+            <div class="product-wrapper">
+                <h3 class="product-title" >عضوية ذهبية</h3>
+                <div class="product-card">
+                    <img src="images/background.jpg" alt="عضوية ذهبية" class="product-image">
+                    <div class="product-info">
+                        <span class="product-price">2000 جنيه</span>
+                        <button class="buy-btn" onclick="goToPurchase(this)">شراء الآن</button>
+                    </div>
+                </div>
+            </div>
+            <div class="product-wrapper">
+                <h3 class="product-title" >عضوية الماسية</h3>
+                <div class="product-card">
+                    <img src="images/background.jpg" alt="عضوية الماسية" class="product-image">
+                    <div class="product-info">
+                        <span class="product-price">2000 جنيه</span>
+                        <button class="buy-btn" onclick="goToPurchase(this)">شراء الآن</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="confirm-modal">
+        <div class="modal-content">
+            <div class="modal-image-container">
+                <img src="" alt="صورة المنتج" class="modal-image">
+            </div>
+            <div class="modal-info">
+                <h3 class="modal-title"></h3>
+                <span class="modal-price"></span>
+                <div class="modal-buttons">
+                    <button class="confirm-btn" onclick="goToPurchase(this)">تأكيد الشراء</button>
+                    <button class="cancel-btn">إلغاء</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showConfirmModal(button) {
+            const card = button.closest('.product-wrapper');
+            const modal = document.querySelector('.confirm-modal');
+            const modalImage = modal.querySelector('.modal-image');
+            const modalTitle = modal.querySelector('.modal-title');
+            const modalPrice = modal.querySelector('.modal-price');
+            
+            const productImage = card.querySelector('.product-image').src;
+            const productTitle = card.querySelector('.product-title').textContent;
+            const productPrice = card.querySelector('.product-price').textContent;
+            
+            modalImage.src = productImage;
+            modalTitle.textContent = productTitle;
+            modalPrice.textContent = productPrice;
+            
+            modal.style.display = 'flex';
+            
+            modal.querySelector('.confirm-btn').onclick = () => {
+                modal.style.display = 'none';
+                window.location.href = `purchase-form.html?title=${encodeURIComponent(productTitle)}&price=${encodeURIComponent(productPrice)}`;
+            };
+            
+            modal.querySelector('.cancel-btn').onclick = () => {
+                modal.style.display = 'none';
+            };
+            
+            modal.onclick = (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            };
+
+            function goToPurchase() {
+            window.location.href = 'purchase-form.html';
+        }
+        }
+    
+        document.querySelectorAll('.buy-btn').forEach(btn => {
+            btn.onclick = () => showConfirmModal(btn);
+        });
+
+        function goToStore() {
+            window.location.href = 'store.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+    const buttons = document.querySelectorAll('.confirm-btn');
+    buttons.forEach(button => {
+        button.addEventListener('click', function () {
+            const productElement = this.parentElement;
+            const productName = productElement.querySelector('.product-title').textContent;
+            const productPrice = productElement.querySelector('.product-price').textContent;
+
+         
+            const url = `purchase-form.html?name=${encodeURIComponent(productName)}&price=${encodeURIComponent(productPrice)}`;
+
+           
+            console.log('Generated URL:', url);
+
+          
+            window.location.href = url;
+        });
+    });
+});
+    </script>
+    
+</body>
+</html>

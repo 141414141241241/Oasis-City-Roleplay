@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>Oasis City Roleplay</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background-image: url('images/background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 0;
+        }
+
+        .content {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-image {
+            width: 200px;
+            height: 200px;
+            margin-bottom: 20px;
+            border-radius: 50%;
+        }
+
+        .buttons-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .play-button, .discord-button {
+            padding: 10px 30px;
+            font-size: 1em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .play-button {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .discord-button {
+            background: linear-gradient(45deg, #7289DA, #5865F2);
+            color: white;
+            box-shadow: 0 5px 15px rgba(114, 137, 218, 0.4);
+        }
+
+        .play-button:hover, .discord-button:hover {
+            transform: translateY(-3px) scale(1.05);
+        }
+
+        .play-button:hover {
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.6);
+        }
+
+        .discord-button:hover {
+            box-shadow: 0 8px 20px rgba(114, 137, 218, 0.6);
+        }
+
+        .play-button:active, .discord-button:active {
+            transform: translateY(2px) scale(0.95);
+        }
+
+        .notification {
+            position: fixed;
+            top: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            padding: 12px 25px;
+            border-radius: 50px;
+            color: white;
+            display: none;
+            animation: fadeInOut 2s ease-in-out;
+            font-size: 1em;
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            z-index: 999;
+        }
+
+        @keyframes fadeInOut {
+            0% { 
+                opacity: 0;
+                transform: translate(-50%, -20px);
+            }
+            15% { 
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+            85% { 
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+            100% { 
+                opacity: 0;
+                transform: translate(-50%, -20px);
+            }
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 50px;
+            z-index: 1000;
+        }
+
+        .nav-logo {
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #ff8e53;
+        }
+
+        .nav-button {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .content {
+            margin-top: 100px;
+        }
+
+        .about-section {
+            display: none;
+            padding: 50px 50px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            margin-top: 0;
+            text-align: center;
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow-y: auto;
+            z-index: 998;
+        }
+
+        .about-title {
+            font-size: 2.5em;
+            color: #ff8e53;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-title {
+            color: #ff6b6b;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .rules-section {
+            display: none;
+            padding: 50px 50px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            margin-top: 0;
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow-y: auto;
+            z-index: 998;
+            color: white;
+        }
+
+        .rules-container {
+            display: flex;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .rules-sidebar {
+            width: 250px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .rules-sidebar a {
+            display: block;
+            padding: 12px 15px;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            margin-bottom: 5px;
+        }
+
+        .rules-sidebar a:hover {
+            background: rgba(255, 107, 107, 0.1);
+            color: #ff6b6b;
+            transform: translateX(5px);
+        }
+
+        .rules-content {
+            flex: 1;
+        }
+
+        .rules-section-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { 
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .rule-item {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            transition: transform 0.2s ease;
+        }
+
+        .rule-title {
+            color: #ff6b6b;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .rule-description {
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        .page-title {
+            font-size: 2em;
+            color: white;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .copyright {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            text-align: center;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.8em;
+            backdrop-filter: blur(5px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 999;
+            font-family: 'Cairo', sans-serif;
+            letter-spacing: 0.5px;
+            transition: background 0.3s ease;
+        }
+
+        .copyright:hover {
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .about-section, .rules-section {
+            padding-bottom: 60px;
+        }
+
+        .content {
+            padding-bottom: 60px;
+        }
+
+        .store-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            gap: 30px;
+            min-height: 80vh;
+        }
+
+        /* تصميم القائمة الجانبية */
+        .store-sidebar {
+            width: 280px;
+            background: linear-gradient(145deg, rgba(40, 40, 40, 0.9), rgba(25, 25, 25, 0.9));
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .store-sidebar .category {
+            padding: 15px 20px;
+            color: #fff;
+            display: block;
+            margin: 10px 0;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .store-sidebar .category:hover {
+            background: #ff6b6b;
+            transform: translateX(-8px);
+        }
+
+        .store-sidebar .category::before {
+            content: '';
+            position: absolute;
+            left: -100%;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: 0.5s;
+        }
+
+        .store-sidebar .category:hover::before {
+            left: 100%;
+        }
+
+        /* تصميم محتوى المتجر */
+        .store-content {
+            flex: 1;
+            padding: 20px;
+            background: rgba(30, 30, 30, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            padding: 10px;
+        }
+
+        .product-card {
+            background: linear-gradient(145deg, rgba(50, 50, 50, 0.9), rgba(35, 35, 35, 0.9));
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.2);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 2px solid #ff6b6b;
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-title {
+            color: #fff;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .product-price {
+            color: #ff6b6b;
+            font-size: 1.4em;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .add-to-cart {
+            flex: 1;
+            padding: 12px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-to-cart:hover {
+            background: #ff5252;
+            transform: scale(1.05);
+        }
+
+        /* تصميم سلة المشتريات */
+        .cart-icon {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #ff6b6b;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .cart-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: white;
+            color: #ff6b6b;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+    </style>
+    <script>
+        function hideAll() {
+            document.getElementById('rules').style.display = 'none';
+            document.getElementById('about').style.display = 'none';
+            document.querySelector('.content').style.display = 'block';
+        }
+
+        function showAbout() {
+            document.getElementById('rules').style.display = 'none';
+            document.getElementById('about').style.display = 'block';
+            document.querySelector('.content').style.display = 'none';
+        }
+
+        function showRules() {
+            document.getElementById('about').style.display = 'none';
+            document.getElementById('rules').style.display = 'block';
+            document.querySelector('.content').style.display = 'none';
+        }
+
+        function copyIP() {
+            const ip = "mtasa://78.47.204.80:27815";
+            navigator.clipboard.writeText(ip).then(function() {
+                const notification = document.getElementById('notification');
+                notification.style.display = 'block';
+                setTimeout(function() {
+                    notification.style.display = 'none';
+                }, 2000);
+            });
+        }
+
+        function showRulesSection(sectionId) {
+            const content = document.querySelector('.rules-content');
+            content.innerHTML = ''; // مسح المحتوى السابق
+            
+            switch(sectionId) {
+                case 'discord-rules':
+                    content.innerHTML = `
+                        <div class="rules-section-content" style="display: block;">
+                            <h1 class="page-title">قوانين الديسكورد</h1>
+                            <div class="rule-item">
+                                <h3 class="rule-title">1. لا تستخدم لغة غير لائقة</h3>
+                                <p class="rule-description">يمنع استخدام:<br>
+                                - الشتائم والألفاظ النابية<br>
+                                - العبارات العنصرية<br>
+                                - الإساءة للآخرين<br>
+                                - التحرش بأي شكل من الأشكال</p>
+                            </div>
+
+                            <div class="rule-item">
+                                <h3 class="rule-title">2. لا ترسل رسائل غير مرغوب بها</h3>
+                                <p class="rule-description">يمنع:<br>
+                                - الإزعاج المتكرر للأعضاء<br>
+                                - المنشن العشوائي للمشرفين<br>
+                                - إرسال رسائل متكررة (سبام)<br>
+                                - إرسال روابط غير مصرح بها</p>
+                            </div>
+
+                            <div class="rule-item">
+                                <h3 class="rule-title">3. لا تعلن عن خوادم أو برامج <span style="color: #FFD700;">الحظر الدائم</span></h3>
+                                <p class="rule-description">يمنع نشر:<br>
+                                - روابط خوادم ديسكورد أخرى<br>
+                                - إعلانات تجارية<br>
+                                - روابط مواقع خارجية<br>
+                                - الترويج لخدمات خارجية</p>
+                            </div>
+
+                            <div class="rule-item">
+                                <h3 class="rule-title">4. الأسماء والصور الشخصية</h3>
+                                <p class="rule-description">يجب أن تكون:<br>
+                                - مناسبة وغير مسيئة<br>
+                                - خالية من الألفاظ النابية<br>
+                                - غير مخالفة لقوانين الديسكورد<br>
+                                - لا تحتوي على محتوى غير لائق</p>
+                            </div>
+
+                            <div class="rule-item">
+                                <h3 class="rule-title">5. احترام الرومات وأقسامها</h3>
+                                <p class="rule-description">- استخدام كل روم في الغرض المخصص له<br>
+                                - عدم نشر محتوى غير مناسب للروم<br>
+                                - الالتزام بموضوع كل قسم</p>
+                            </div>
+
+                            <div class="rule-item">
+                                <h3 class="rule-title">6. المحتوى المحظور</h3>
+                                <p class="rule-description">يمنع نشر:<br>
+                                - محتوى إباحي<br>
+                                - محتوى عنيف<br>
+                                - معلومات شخصية<br>
+                                - برامج ضارة أو فيروسات</p>
+                            </div>
+
+                            <div class="rule-item">
+                                <h3 class="rule-title">7. احترام قرارات الإدارة</h3>
+                                <p class="rule-description">- الالتزام بتوجيهات المشرفين<br>
+                                - عدم التشكيك في القرارات الإدارية<br>
+                                - استخدام تذكرة الدعم للشكاوى</p>
+                            </div>
+
+                            <div class="rule-item">
+                                <h3 class="rule-title">8. المناقشات المحظورة</h3>
+                                <p class="rule-description">يمنع النقاش في:<br>
+                                - المواضيع السياسية<br>
+                                - المواضيع الدينية<br>
+                                - المواضيع العنصرية<br>
+                                - أي موضوع يثير الفتنة</p>
+                            </div>
+
+                            <div class="rule-item">
+                                <h3 class="rule-title">9. العقوبات</h3>
+                                <p class="rule-description">مخالفة القوانين تؤدي إلى:<br>
+                                - تحذير<br>
+                                - ميوت مؤقت<br>
+                                - حظر مؤقت<br>
+                                - حظر دائم (للمخالفات الجسيمة)</p>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'gov-rules':
+                    content.innerHTML = `
+                        <div class="rules-section-content" style="display: block;">
+                        <h1 class="page-title">قوانين القطاعات الحكومية</h1>
+                            <div class="rule-item">
+                                <h3 class="rule-title">1. الاحترام المهني</h3>
+                                <p class="rule-description">يجب على جميع القطاعات الحكومية التحلي بصفات الاحترام في التعامل مع المواطنين والزملاء</p>
+                            </div>
+
+                            <div class="rule-item">
+                                <h3 class="rule-title">2. الالتزام بالشخصية المهنية</h3>
+                                <p class="rule-description">- يجب الالتزام بالشخصية العسكرية للقوات الأمنية<br>
+                                - يجب الالتزام بشخصية الدكتور إذا كنت مسعف<br>
+                                - الحفاظ على الهيبة والوقار أثناء العمل</p>
+                            </div>
+
+                            <div class="rule-item">
+                                <h3 class="rule-title">3. صفات المسعف</h3>
+                                <p class="rule-description">يجب على المسعف التمتع بصفات المسامحة والعمل الجماعي والتعامل باحترافية مع جميع الحالات</p>
+                            </div>
+
+                            <div class="rule-item">
+                                <h3 class="rule-title">4. حمل السلاح <span style="color: #FFD700;">مخالفة جسيمة</span></h3>
+                                <p class="rule-description">يمنع منعاً باتاً حمل السلاح للوظائف التالية:<br>
+                                - المسعفين<br>
+                                - الميكانيكيين</p>
+                            </div>
+
+                            <div class="rule-item">
+                                <h3 class="rule-title">5. نظام الإجازات</h3>
+                                <p class="rule-description">- يمنع الخروج من الوظيفة بدون أخذ إجازة داخلية<br>
+                                - يمنع استمرار الخروج من الخدمة بعد انتهاء وقت الراحة<br>
+                                - يجب إبلاغ المسؤول المباشر عند الحاجة للخروج الطارئ</p>
+                            </div>
+
+                            <div class="rule-item">
+                                <h3 class="rule-title">6. آداب التعامل</h3>
+                                <p class="rule-description">- يمنع التحدث بطريقة غير لائقة بحجة المهنة الوظيفية<br>
+                                - يمنع سب الأهل بحجة المهنة الوظيفية<br>
+                                - الحفاظ على أخلاقيات المهنة في جميع الأوقات</p>
+                            </div>
+
+                            <div class="rule-item">
+                                <h3 class="rule-title">7. الزي الرسمي</h3>
+                                <p class="rule-description">- الالتزام بالزي الرسمي المخصص لكل وظيفة<br>
+                                - الحفاظ على نظافة وترتيب الزي<br>
+                                - عدم إضافة أي تعديلات غير مصرح بها على الزي</p>
+                            </div>
+
+                            <div class="rule-item">
+                                <h3 class="rule-title">8. التواصل المهني</h3>
+                                <p class="rule-description">- استخدام اللغة الرسمية في التواصل<br>
+                                - الرد السريع على نداءات الطوارئ<br>
+                                - الحفاظ على السرية المهنية</p>
+                            </div>
+
+                            <div class="rule-item">
+                                <h3 class="rule-title">9. العقوبات المهنية</h3>
+                                <p class="rule-description">مخالفة هذه القوانين قد تؤدي إلى:<br>
+                                - إنذار شفوي<br>
+                                - غرامه مالية <br>
+                                - إيقاف مؤقت عن العمل<br>
+                                - فصل من الخدمة  <br>
+                                </p>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'prison-rules':
+                    content.innerHTML = `
+                        <div class="rules-section-content" style="display: block;">
+                         <h1 class="page-title">أوقات السجون</h1>
+                            <div class="rule-item">
+                                <h3 class="rule-title">فصل اثناء سينايرو</h3>
+                                <p class="rule-description">500 دقيقة سجن</p>
+                            </div>
+                            <div class="rule-item">
+                                <h3 class="rule-title">تخريب معتمد</h3>
+                                <p class="rule-description">250 دقيقة سجن</p>
+                            </div>
+                                <div class="rule-item">
+                                <h3 class="rule-title">قتل ميكانيكي - مسعف</h3>
+                                <p class="rule-description">120 دقيقة سجن</p>
+                            </div>
+                             </div>
+                                <div class="rule-item">
+                                <h3 class="rule-title">انتقال للمشفي اثناء السينايرو</h3>
+                                <p class="rule-description">120 دقيقة سجن</p>
+                            </div>
+                             </div>
+                                <div class="rule-item">
+                                <h3 class="rule-title">قتل بداعي المتعة</h3>
+                                <p class="rule-description">120 دقيقة سجن</p>
+                            </div>
+                             </div>
+                                <div class="rule-item">
+                                <h3 class="rule-title">تدخل في سينايرو</h3>
+                                <p class="rule-description">120 دقيقة سجن</p>
+                            </div>
+                             </div>
+                                <div class="rule-item">
+                                <h3 class="rule-title">اطلاق نار بشكل عشوائي</h3>
+                                <p class="rule-description">60 دقيقة سجن</p>
+                            </div>
+                             </div>
+                                <div class="rule-item">
+                                <h3 class="rule-title">عدم تقدير حياة</h3>
+                                <p class="rule-description">60 دقيقة سجن</p>
+                            </div>
+                             </div>
+                                <div class="rule-item">
+                                <h3 class="rule-title">استعمال المركبة كسلاح</h3>
+                                <p class="rule-description">60 دقيقة سجن</p>
+                            </div>
+                             </div>
+                                <div class="rule-item">
+                                <h3 class="rule-title">الترصد للمهربين</h3>
+                                <p class="rule-description">60 دقيقة سجن</p>
+                            </div>
+                            </div>
+                                <div class="rule-item">
+                                <h3 class="rule-title">الترصد للحرس</h3>
+                                <p class="rule-description">60 دقيقة سجن</p>
+                            </div>
+                            </div>
+                                <div class="rule-item">
+                                <h3 class="rule-title">مخالفة قوانين الإجرام</h3>
+                                <p class="rule-description">60 دقيقة سجن</p>
+                            </div>
+                            </div>
+                                <div class="rule-item">
+                                <h3 class="rule-title">مخالفة القوانين العامة</h3>
+                                <p class="rule-description">60 دقيقة سجن</p>
+                            </div>
+                            </div>
+                                <div class="rule-item">
+                                <h3 class="rule-title">تهديد ميكانيكي - مسعف</h3>
+                                <p class="rule-description">60 دقيقة سجن</p>
+                            </div>
+                            </div>
+                                <div class="rule-item">
+                                <h3 class="rule-title">مخالفة قوانين القطاعات المعتمدة</h3>
+                                <p class="rule-description">60 دقيقة سجن</p>
+                            </div>
+                            </div>
+                                <div class="rule-item">
+                                <h3 class="rule-title">تخريب التمثيل</h3>
+                                <p class="rule-description">30 دقيقة سجن</p>
+                            </div>
+                            </div>
+                                <div class="rule-item">
+                                <h3 class="rule-title">تفاعل مع مسقط</h3>
+                                <p class="rule-description">30 دقيقة سجن</p>
+                            </div>
+                            </div>
+                                <div class="rule-item">
+                                <h3 class="rule-title">عدم تمثيل الخوف داخل استنفار</h3>
+                                <p class="rule-description">30 دقيقة سجن</p>
+                            </div>
+                            </div>
+                                <div class="rule-item">
+                                <h3 class="rule-title">دخول الميناء بدون قارب مجهز</h3>
+                                <p class="rule-description">20 دقيقة سجن</p>
+                            </div>
+                            </div>
+                                <div class="rule-item">
+                                <h3 class="rule-title">تفاعل مع الرقابة</h3>
+                                <p class="rule-description">15 دقيقة سجن</p>
+                            </div>
+                            </div>
+                                <div class="rule-item">
+                                <h3 class="rule-title">تخريب طابور الميناء</h3>
+                                <p class="rule-description">15 دقيقة سجن</p>
+                            </div>
+                            </div>
+                                <div class="rule-item">
+                                <h3 class="rule-title">تخريب طابور التعديل</h3>
+                                <p class="rule-description">15 دقيقة سجن</p>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'mute-rules':
+                    content.innerHTML = `
+                        <div class="rules-section-content" style="display: block;">
+                            <h1 class="page-title">أوقات الميوت</h1>
+                            <div class="rule-item">
+                                <h3 class="rule-title">الميوت</h3>
+                                <p class="rule-description">يتم تحديد مدة عقوبتك علي حسب مخالفتك من قبل الشخص اللي الذي عاقبك , او مسؤولين الديسكورد</p>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'ban-rules':
+                    content.innerHTML = `
+                        <div class="rules-section-content" style="display: block;">
+                            <h1 class="page-title">أوقات الحظر</h1>
+                            <div class="rule-item">
+                                <h3 class="rule-title">استخدام الهاك</h3>
+                                <p class="rule-description">حظر دائم</p>
+                            </div>
+                            <div class="rule-item">
+                                <h3 class="rule-title">استخدام الثغرات</h3>
+                                <p class="rule-description">حظر دائم</p>
+                            </div>
+                            <div class="rule-item">
+                                <h3 class="rule-title">سب إداري</h3>
+                                <p class="rule-description">بمعني في حال إداري صكك او ما شابه ورحت شتمته في الخاص بيتم = حظر دائم</p>
+                            </div>
+                            <div class="rule-item">
+                                <h3 class="rule-title">Bans</h3>
+                                <p class="rule-description">الباقي من المخالفات يتم تحديده اوقاتها من قبل الإدارة العليا</p>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'server-rules':
+                    content.innerHTML = `
+                        <div class="rules-section-content" style="display: block;">
+                            <h1 class="page-title">قوانين الخادم</h1>
+                            <div class="rule-item">
+                                <h3 class="rule-title">1. منع برامج الغش (Hacks)</h3>
+                                <p class="rule-description">يمنع منعاً باتاً استخدام أي نوع من برامج الغش أو التهكير. المخالفة تؤدي إلى حظر دائم</p>
+                            </div>
+
+                            <div class="rule-item">
+                                <h3 class="rule-title">2. منع استغلال الثغرات (Bug Abuse)</h3>
+                                <p class="rule-description">يمنع استغلال أي ثغرات في السيرفر. في حال اكتشاف ثغرة يجب إبلاغ الإدارة فوراً</p>
+                            </div>
+
+                            <div class="rule-item">
+                                <h3 class="rule-title">3. منع التحايل على الحظر (Ban Evading)</h3>
+                                <p class="rule-description">يمنع محاولة الدخول للسيرفر بعد الحظر باستخدام حساب آخر</p>
+                            </div>
+
+                            <div class="rule-item">
+                                <h3 class="rule-title">4. منع السبام (Spamming)</h3>
+                                <p class="rule-description">يمنع إرسال رسائل متكررة أو مزعجة في الشات</p>
+                            </div>
+
+                            <div class="rule-item">
+                                <h3 class="rule-title">5. احترام اللاعبين (Player Respect)</h3>
+                                <p class="rule-description">يجب احترام جميع اللاعبين وعدم استخدام ألفاظ مسيئة أو عنصرية</p>
+                            </div>
+
+                            <div class="rule-item">
+                                <h3 class="rule-title">6. منع الديث ماتش (Deathmatch)</h3>
+                                <p class="rule-description">يمنع القتل العشوائي للاعبين بدون سبب واضح أو سياق لعب دور</p>
+                            </div>
+
+                            <div class="rule-item">
+                                <h3 class="rule-title">7. منع الباور قيمنق (Power Gaming)</h3>
+                                <p class="rule-description">يمنع استخدام قوة غير منطقية أو القيام بأفعال مستحيلة في الواقع</p>
+                            </div>
+
+                            <div class="rule-item">
+                                <h3 class="rule-title">8. منع الميتا قيمنق (Meta Gaming)</h3>
+                                <p class="rule-description">يمنع استخدام معلومات خارج نطاق اللعب في السيرفر</p>
+                            </div>
+
+                            <div class="rule-item">
+                                <h3 class="rule-title">9. احترام الأحداث (Events)</h3>
+                                <p class="rule-description">يجب احترام الأحداث الرسمية وعدم تخريبها أو التشويش عليها</p>
+                            </div>
+
+                            <div class="rule-item">
+                                <h3 class="rule-title">10. منع التصيد (Trolling)</h3>
+                                <p class="rule-description">يمنع استفزاز اللاعبين أو التصيد بهم بقصد الإزعاج</p>
+                            </div>
+
+                            <div class="rule-item">
+                                <h3 class="rule-title">11. الإبلاغ عن المخالفات</h3>
+                                <p class="rule-description">يجب إبلاغ الإدارة عن أي مخالفات تشاهدها في السيرفر</p>
+                            </div>
+
+                            <div class="rule-item">
+                                <h3 class="rule-title">12. العقوبات</h3>
+                                <p class="rule-description">مخالفة هذه القوانين قد تؤدي إلى:<br>
+                                - صك<br>
+                                - حظر مؤقت<br>
+                                - حظر دائم<br>
+                                حسب نوع وتكرار المخالفة</p>
+                            </div>
+                        </div>
+                    `;
+                    break;
+            }
+        }
+
+        function goToStore() {
+            window.location.href = 'store.html';
+        }
+    </script>
+</head>
+<body>
+    <nav class="navbar">
+        <img src="images/oasis-logo.png" alt="الواحة" class="nav-logo" onclick="hideAll(); return false;" style="cursor: pointer;">
+        <div class="nav-links">
+            <a href="#" onclick="hideAll(); return false;" class="nav-link">الرئيسية</a>
+            <a href="#" onclick="showAbout(); return false;" class="nav-link">عن السيرفر</a>
+            <a href="#" onclick="showRules(); return false;" class="nav-link">القوانين</a>
+            <a href="#" onclick="goToStore(); return false;" class="nav-link">المتجر</a>
+            <a href="https://discord.gg/xYvsHN8QWm" target="_blank" class="nav-link">رابط الديسكورد</a>
+            <a href="https://discord.com/channels/1014876354145161236/1325159796990672986" class="nav-button">تفعيل الخادم</a>
+        </div>
+    </nav>
+
+    <div id="notification" class="notification">تم نسخ ايـبـي الخادم ✓ </div>
+    <div class="content">
+        <img src="images/oasis-logo.png" alt="الواحة" class="logo-image">
+        <br>
+        <div class="buttons-container">
+            <a href="#" onclick="copyIP(); return false;" class="play-button">العب الآن</a>
+            <a href="https://discord.gg/xYvsHN8QWm" target="_blank" class="discord-button">الديسكورد الرسمي</a>
+        </div>
+        <div class="copyright">©V1 Oasis City Roleplay, Developed by OmAr</div>
+    </div>
+
+    <div id="about" class="about-section">
+        <h2 class="about-title">مرحباً بك في سيرفر الواحة</h2>
+        <div class="about-content">
+            <p style="color: #fff; font-size: 1.1em; margin-bottom: 30px;">
+                انضم إلى مجتمعنا المميز في سيرفر الواحة للحياة الواقعية، حيث نقدم تجربة لعب فريدة ومثيرة في  MTA:SA. 
+                سيرفر يجمع بين الواقعية والمتعة، مع نظام متطور خاص متكامل وتحديثات مستمرة.
+            </p>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3 class="feature-title">نظام وظائف متكامل</h3>
+                    <p> اختر من بين مجموعة متنوعة من الوظائف والمهن، اكسب المال والخبرات وطور من نفسك</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3 class="feature-title">نظام البيوت متطور</h3>
+                    <p>امتلك منزلك الخاص، ويمكنك تخزين اشياء بداخلة وشراء الخزنة الخاصة بك</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3 class="feature-title">مجتمع نشط</h3>
+                    <p>انضم إلى مجتمع من اللاعبين النشطين، شارك في الفعاليات والمسابقات اليومية</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3 class="feature-title">تحديثات مستمرة</h3>
+                    <p>نعمل باستمرار على تطوير السيرفر وإضافة محتوى جديد لتحسين تجربة اللعب</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3 class="feature-title">دعم فني متواصل</h3>
+                    <p>فريق دعم متواجد على مدار الساعة لمساعدتك وحل أي مشكلة قد تواجهك</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3 class="feature-title">أنظمة حماية متطورة</h3>
+                    <p>نظام حماية قوي ضد الغش والهاكات لضمان تجربة لعب عادلة للجميع</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="rules" class="rules-section">
+        <div class="rules-container">
+            <div class="rules-sidebar">
+                <a href="#" onclick="showRulesSection('discord-rules')">قوانين الديسكورد</a>
+                <a href="#" onclick="showRulesSection('server-rules')">قوانين الخادم</a>
+                <a href="#" onclick="showRulesSection('gov-rules')">قوانين القطاعات الحكومية</a>
+                <a href="#" onclick="showRulesSection('prison-rules')">أوقات السجون</a>
+                <a href="#" onclick="showRulesSection('mute-rules')">أوقات الميوت</a>
+                <a href="#" onclick="showRulesSection('ban-rules')">أوقات الحظر</a>
+            </div>
+            <div class="rules-content">
+                <h1 class="page-title">القوانين</h1>
+                
+                <div class="rule-item">
+                    <h3 class="rule-title">1. قوانين الديسكورد</h3>
+                    <p class="rule-description">هي القوانين التي يمنع مخالفتها في سيرفر الديسكورد لعدم التعرض للعقوبة</p>
+                </div>
+
+                <div class="rule-item">
+                    <h3 class="rule-title">2. قوانين الخادم</h3>
+                    <p class="rule-description">قوانين الخادم هي القوانين التي يمنع مخالفتها داخل السيرفر منعا باتا لعدم التعرض للعقوبة</p>
+                </div>
+
+                <div class="rule-item">
+                    <h3 class="rule-title">3. قوانين القطاعات الحكومية</h3>
+                    <p class="rule-description">هي القوانين التي يمنع مخالفتها في حال كنت في قطاع حكومي مثل : الأمن العام - الدفاع الدمني - كراج الميكانيكي - الجمارك</p>
+                </div>
+
+                <div class="rule-item">
+                    <h3 class="rule-title">4. اوقات السجون</h3>
+                    <p class="rule-description">اوقات السجون هي الاوقات التي يتم وضعك فيها في سجن لفتره معينه في حال تم مخالفت احد قوانين الخادم</p>
+                </div>
+
+                <div class="rule-item">
+                    <h3 class="rule-title">5. اوقات الميوت</h3>
+                    <p class="rule-description">هي الاوقات التي يتم اعطائك اياها وانها تقوم بكتمك وتمنعك عن الكتابة لفتره محدوده في حال مخالفة قوانين الديسكودر يتم وضعها عليك</p>
+                </div>
+
+                <div class="rule-item">
+                    <h3 class="rule-title">6. اوقات الحظر</h3>
+                    <p class="rule-description">هي الاوقات التي يتم حظرك فيها من دخول خادم MTA:SA الخاص بنا في حال مخالفة القوانين</p>
+                </div>
+            </div>
+        </div>
+
+</body>
+</html>
